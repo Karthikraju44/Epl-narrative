@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Narrative Fingerprints: Premier League Media Analysis</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#14182b;--muted:#5a6078;--accent:#4b2fd1;--accent2:#d9285a;--line:#e2e5f0;--code:#12152a;--codetx:#e6e8ff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1020;--card:#171a30;--text:#eef0ff;--muted:#a3a9c9;--accent:#8f7bff;--accent2:#ff6b94;--line:#2a2e4c;--code:#080a16}}
+:root[data-theme="dark"]{--bg:#0e1020;--card:#171a30;--text:#eef0ff;--muted:#a3a9c9;--accent:#8f7bff;--accent2:#ff6b94;--line:#2a2e4c;--code:#080a16}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav .wrap{display:flex;gap:18px;align-items:center;overflow-x:auto;height:52px;white-space:nowrap}
+nav b{margin-right:auto;color:var(--accent)}
+nav a{color:var(--muted);text-decoration:none;font-size:14px}
+nav a:hover{color:var(--accent)}
+.hero{padding:72px 0 48px}
+.tag{display:inline-block;font-size:13px;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:3px 12px}
+h1{font-size:clamp(32px,6vw,56px);line-height:1.1;margin:18px 0 14px}
+h1 span{color:var(--accent2)}
+.lead{font-size:18px;color:var(--muted);max-width:680px}
+.btns{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{background:var(--accent);color:#fff;padding:11px 20px;border-radius:10px;text-decoration:none;font-weight:600}
+.btn.alt{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+section{padding:44px 0;border-top:1px solid var(--line)}
+h2{font-size:28px;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.num{font-size:13px;font-weight:700;color:var(--accent2)}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:620px){.vs{grid-template-columns:1fr}}
+.vs .card.us{border-color:var(--accent);border-width:2px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pills span{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 12px;font-size:14px}
+pre{background:var(--code);color:var(--codetx);padding:18px;border-radius:12px;overflow-x:auto;font-size:14px;line-height:1.5}
+.slot{background:var(--card);border:2px dashed var(--line);border-radius:14px;padding:18px;text-align:center}
+.slot img{max-width:100%;border-radius:8px;display:block;margin:12px auto 0}
+.slot p{color:var(--muted);font-size:14px;margin:4px 0 10px}
+.slot input{font-size:13px;max-width:100%}
+.note{font-size:14px;color:var(--muted);margin-top:16px}
+footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><b>⚽ Team Blaugrana</b><a href="#angle">Angle</a><a href="#pipeline">Pipeline</a><a href="#results">Results</a><a href="#run">Run it</a></div></nav>
+
+<header class="hero"><div class="wrap">
+<span class="tag">Web Crawling + Text Analyser + Clustering</span>
+<h1>Narrative <span>Fingerprints</span> of the Premier League</h1>
+<p class="lead">We crawl football journalism, cluster it by the kind of story being told, and build a fingerprint of how the media talks about each club.</p>
+<div class="btns"><a class="btn" href="#results">See results</a><a class="btn alt" href="#pipeline">How it works</a></div>
+</div></header>
+
+<section id="angle"><div class="wrap">
+<h2>Our angle</h2>
+<p class="sub">Topic clustering tells you what an article is about. We ask how the story is framed.</p>
+<div class="vs">
+<div class="card"><h3>Typical approach</h3><p>Group articles by topic: transfers, injuries, match results. Useful, but every team ends up with similar clusters.</p></div>
+<div class="card us"><h3>Our approach</h3><p>Group articles by narrative frame (crisis, title race, redemption, injury blow, hype), then compare clubs by the mix of frames and the tone of coverage.</p></div>
+</div>
+</div></section>
+
+<section id="pipeline"><div class="wrap">
+<h2>Pipeline</h2>
+<p class="sub">Five stages, one Python script.</p>
+<div class="grid">
+<div class="card"><div class="num">01</div><h3>Crawl</h3><p>Collect BBC Sport EPL article links, then download and parse title, date and body with polite delays.</p></div>
+<div class="card"><div class="num">02</div><h3>Clean and tag</h3><p>Normalise text and assign each article a primary club by weighted mention counts.</p></div>
+<div class="card"><div class="num">03</div><h3>Vectorise</h3><p>TF-IDF with unigrams and bigrams. Club names are removed so clusters capture narrative, not identity.</p></div>
+<div class="card"><div class="num">04</div><h3>Cluster</h3><p>KMeans, with k chosen by silhouette score, and top terms per cluster to name each narrative.</p></div>
+<div class="card"><div class="num">05</div><h3>Score and visualise</h3><p>VADER sentiment per article, then a club × narrative heatmap and sentiment chart.</p></div>
+</div>
+<h2 style="margin-top:36px;font-size:20px">Tech stack</h2>
+<div class="pills"><span>Python</span><span>requests</span><span>BeautifulSoup</span><span>pandas</span><span>scikit-learn</span><span>VADER</span><span>matplotlib</span></div>
+</div></section>
+
+<section id="results"><div class="wrap">
+<h2>Results</h2>
+<p class="sub">Run the script, then load each plot from your <code>output/</code> folder below. Images stay in your browser only.</p>
+<div class="grid">
+<div class="slot" data-name="Narrative fingerprint heatmap"><b>Narrative fingerprint per club</b><p>plot_club_fingerprint.png</p><input type="file" accept="image/*"></div>
+<div class="slot" data-name="Cluster scatter"><b>Article clusters (PCA)</b><p>plot_clusters.png</p><input type="file" accept="image/*"></div>
+<div class="slot" data-name="Sentiment per club"><b>Media sentiment per club</b><p>plot_club_sentiment.png</p><input type="file" accept="image/*"></div>
+</div>
+<p class="note">For your report, name each cluster using <code>cluster_top_terms.csv</code> and describe what the heatmap shows about the most and least favourably covered clubs.</p>
+</div></section>
+
+<section id="run"><div class="wrap">
+<h2>Run it yourself</h2>
+<p class="sub">Python 3.9 or newer.</p>
+<pre><code>pip install requests beautifulsoup4 pandas scikit-learn matplotlib vaderSentiment
+python epl_narrative_pipeline.py --max-articles 150</code></pre>
+</div></section>
+
+<footer><div class="wrap">Team Blaugrana · VIT Amaravati · Web Crawling, Text Analysis and Clustering project · Data: BBC Sport, used for academic purposes.</div></footer>
+
+<script>
+document.querySelectorAll('.slot input').forEach(function(inp){
+  inp.addEventListener('change',function(){
+    var f=inp.files[0]; if(!f) return;
+    var slot=inp.closest('.slot'), r=new FileReader();
+    r.onload=function(){
+      var old=slot.querySelector('img'); if(old) old.remove();
+      var im=document.createElement('img'); im.src=r.result; im.alt=slot.dataset.name;
+      slot.appendChild(im);
+    };
+    r.readAsDataURL(f);
+  });
+});
+</script>
+</body>
+</html>
